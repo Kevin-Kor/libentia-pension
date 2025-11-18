@@ -387,8 +387,8 @@ document.addEventListener('DOMContentLoaded', function() {
      * Send data to Google Apps Script
      */
     async function sendToGoogleScript(data) {
-        // Google Apps Script Web App URL - 배포 후 실제 URL로 교체하세요
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec';
+        // Google Apps Script Web App URL - 실제 배포된 URL
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxs1l_xnisXnO0JwBUiCsLaKRAeZ7V1xm3AlpDU0x7czaBZ9NrLk0cpwgaKn2colaAKAQ/exec';
 
         try {
             const response = await fetch(GOOGLE_SCRIPT_URL, {
