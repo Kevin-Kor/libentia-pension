@@ -391,10 +391,11 @@ document.addEventListener('DOMContentLoaded', function() {
         const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwCtBBgfBCP4AbfYktrIHnzntnjTpK6jg7kM02G_rg9lpH7jXEi_EdETL1GStsQZmRyFQ/exec';
 
         try {
+            // CORS 문제 해결: Content-Type을 text/plain으로 변경하여 preflight 요청 방지
             const response = await fetch(GOOGLE_SCRIPT_URL, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'text/plain;charset=utf-8',
                 },
                 body: JSON.stringify(data),
                 mode: 'cors'
