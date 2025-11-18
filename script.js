@@ -388,7 +388,7 @@ document.addEventListener('DOMContentLoaded', function() {
      */
     async function sendToGoogleScript(data) {
         // Google Apps Script Web App URL - 실제 배포된 URL
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxs1l_xnisXnO0JwBUiCsLaKRAeZ7V1xm3AlpDU0x7czaBZ9NrLk0cpwgaKn2colaAKAQ/exec';
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwCtBBgfBCP4AbfYktrIHnzntnjTpK6jg7kM02G_rg9lpH7jXEi_EdETL1GStsQZmRyFQ/exec';
 
         try {
             const response = await fetch(GOOGLE_SCRIPT_URL, {
