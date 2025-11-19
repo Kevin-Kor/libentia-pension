@@ -172,10 +172,23 @@ document.addEventListener('DOMContentLoaded', function() {
             return { valid: false, message: '체크아웃은 체크인 다음날부터 가능합니다' };
         }
 
-        // Check if checkin is on weekday (Monday-Thursday)
+        // Check if checkin is on allowed days (Sunday-Thursday)
         const checkinDay = checkinDate.getDay();
-        if (checkinDay === 0 || checkinDay === 5 || checkinDay === 6) {
-            return { valid: false, message: '평일(월~목)만 예약 가능합니다' };
+        if (checkinDay === 5 || checkinDay === 6) { // Friday(5) or Saturday(6)
+            return { valid: false, message: '일~목요일만 예약 가능합니다' };
+        }
+
+        // Check date range: November-December first week only
+        const currentYear = today.getFullYear();
+        const startDate = new Date(currentYear, 10, 1); // November 1st
+        const endDate = new Date(currentYear, 11, 7);   // December 7th
+
+        if (checkinDate < startDate || checkinDate > endDate) {
+            return { valid: false, message: '11월~12월 첫째주까지만 예약 가능합니다' };
+        }
+
+        if (checkoutDate > endDate) {
+            return { valid: false, message: '체크아웃은 12월 7일까지만 가능합니다' };
         }
 
         return { valid: true };
@@ -278,12 +291,19 @@ document.addEventListener('DOMContentLoaded', function() {
      */
     function initDateRestrictions() {
         const today = new Date();
-        const tomorrow = new Date(today);
-        tomorrow.setDate(tomorrow.getDate() + 1);
+        const currentYear = today.getFullYear();
 
-        // Set minimum date to tomorrow
-        const minDate = tomorrow.toISOString().split('T')[0];
+        // Set date range: November 1st to December 7th of current year
+        const startDate = new Date(currentYear, 10, 1); // November 1st (month is 0-indexed)
+        const endDate = new Date(currentYear, 11, 7);   // December 7th (first week)
+
+        // Set minimum date to November 1st or today, whichever is later
+        const minDate = today > startDate ? today.toISOString().split('T')[0] : startDate.toISOString().split('T')[0];
+        const maxDate = endDate.toISOString().split('T')[0];
+
         checkinInput.setAttribute('min', minDate);
+        checkinInput.setAttribute('max', maxDate);
+        checkoutInput.setAttribute('max', maxDate);
 
         // Update checkout minimum when checkin changes
         checkinInput.addEventListener('change', function() {
@@ -299,13 +319,13 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        // Validate weekday restriction
+        // Validate weekday restriction (Sunday-Thursday only)
         checkinInput.addEventListener('change', function() {
             const selectedDate = new Date(this.value);
             const dayOfWeek = selectedDate.getDay();
 
-            if (dayOfWeek === 0 || dayOfWeek === 5 || dayOfWeek === 6) {
-                setCustomError(this, '평일(월~목)만 예약 가능합니다');
+            if (dayOfWeek === 5 || dayOfWeek === 6) { // Friday or Saturday
+                setCustomError(this, '일~목요일만 예약 가능합니다');
                 this.value = '';
             } else {
                 this.classList.remove('is-invalid');
@@ -485,11 +505,18 @@ document.addEventListener('DOMContentLoaded', function() {
      */
     function updateDateRestrictions() {
         const today = new Date();
-        const tomorrow = new Date(today);
-        tomorrow.setDate(tomorrow.getDate() + 1);
+        const currentYear = today.getFullYear();
 
-        const minDate = tomorrow.toISOString().split('T')[0];
+        // Set date range: November 1st to December 7th of current year
+        const startDate = new Date(currentYear, 10, 1); // November 1st
+        const endDate = new Date(currentYear, 11, 7);   // December 7th
+
+        const minDate = today > startDate ? today.toISOString().split('T')[0] : startDate.toISOString().split('T')[0];
+        const maxDate = endDate.toISOString().split('T')[0];
+
         checkinInput.setAttribute('min', minDate);
+        checkinInput.setAttribute('max', maxDate);
+        checkoutInput.setAttribute('max', maxDate);
     }
 
     // Add floating effect to price banner
